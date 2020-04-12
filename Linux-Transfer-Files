@@ -1,5 +1,3 @@
-Python SimpleHTTPServer
-
 #on Attacker
 python -m SimpleHTTPServer 1234
 
