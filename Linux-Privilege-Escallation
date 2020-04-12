@@ -1,0 +1,50 @@
+1. run linpeas.sh
+2. lse.sh
+3. linux-exploit-suggester.sh
+
+---------------------
+Manual Checking
+---------------------
+OS, Kernel & Hostname
+
+cat /etc/issue 
+cat /proc/version 
+hostname 
+uname -a 
+------------
+crontab -l 
+cat /etc/crontab
+cat /etc/cron.daily -- check all cron file ok 
+--------------------
+user
+cat /etc/passwd
+
+--------------------
+sudo prives running
+sudo -l
+--------------------
+Applications and services These commands retrieve information about applications and services. 
+
+ps aux
+ps -ef | grep root
+ps aux | grep root 
+--------------------
+how to find installed service running outdated 
+ps aux
+--------------------
+find all SUID programs on a given system:
+find /* -user root -perm -4000 -print 2>/dev/null
+--------------------
+World writable directories
+
+find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep -v root 
+--------------------
+World writable files: 
+find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null 
+--------------------
+Find world writable files in /etc: 
+find /etc -perm -2 -type f 2>/dev/null 
+--------------------
+And the following command searches for world writable directories
+find / -writable -type d 2>/dev/null 
+--------------------
